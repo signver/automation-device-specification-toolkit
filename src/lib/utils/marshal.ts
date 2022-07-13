@@ -1,4 +1,4 @@
-import * as obj from './object'
+import * as obj from './object';
 
 export type MarshalDirective = {
   accessor: string;
@@ -16,7 +16,7 @@ export default ({
 }: {
   bigEndian?: boolean;
   nullTerminatedStrings?: boolean;
-}) => ({
+} = {}) => ({
   o2b: <T extends {}>(
     object: T,
     buffer: Buffer,
@@ -30,7 +30,8 @@ export default ({
         switch (typeof value) {
           case 'string':
             buffer.write(value, directive.offset, 'ascii');
-            nullTerminatedStrings && buffer.writeUInt8(0, directive.offset + value.length);
+            nullTerminatedStrings &&
+              buffer.writeUInt8(0, directive.offset + value.length);
             break;
           case 'bigint':
             if (directive.primitive?.signed) {
