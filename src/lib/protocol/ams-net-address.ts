@@ -1,4 +1,4 @@
-import { Nullable } from 'utils';
+import { Nullable } from 'lib/utils';
 import {
   AMSNetID,
   AMSNetIDString,
