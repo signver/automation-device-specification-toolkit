@@ -13,5 +13,8 @@
     "@types/node": "^18.0.3",
     "jest": "^28.1.2",
     "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@signver/handle-chain": "^2.0.0"
   }
 }

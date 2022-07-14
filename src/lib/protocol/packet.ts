@@ -64,46 +64,54 @@ export type ADSPacketBase<
   'command',
   Command
 >;
-export type ADSReadPacket = ADSPacketBase<ADSReadPayload, ADSCommand.Read>;
-export type ADSReadDeviceInfoPacket = ADSPacketBase<
+export type ADSReadRequestPacket = ADSPacketBase<
+  ADSReadPayload,
+  ADSCommand.Read
+>;
+export type ADSReadDeviceInfoRequestPacket = ADSPacketBase<
   {},
   ADSCommand.ReadDeviceInfo
 >;
-export type ADSReadStatePacket = ADSPacketBase<{}, ADSCommand.ReadState>;
-export type ADSReadWritePacket = ADSPacketBase<
+export type ADSReadStateRequestPacket = ADSPacketBase<{}, ADSCommand.ReadState>;
+export type ADSReadWriteRequestPacket = ADSPacketBase<
   ADSReadWritePayload,
   ADSCommand.ReadWrite
 >;
-export type ADSWritePacket = ADSPacketBase<ADSWritePayload, ADSCommand.Write>;
-export type ADSWriteControlPacket = ADSPacketBase<
+export type ADSWriteRequestPacket = ADSPacketBase<
+  ADSWritePayload,
+  ADSCommand.Write
+>;
+export type ADSWriteControlRequestPacket = ADSPacketBase<
   ADSWriteControlPayload,
   ADSCommand.WriteControl
 >;
-export type ADSAddDeviceNotificationPacket = ADSPacketBase<
+export type ADSAddDeviceNotificationRequestPacket = ADSPacketBase<
   ADSAddDeviceNotificationPayload,
   ADSCommand.AddDeviceNotification
 >;
-export type ADSDeleteNotificationPacket = ADSPacketBase<
+export type ADSDeleteNotificationRequestPacket = ADSPacketBase<
   ADSDeleteDeviceNotificationPayload,
   ADSCommand.DeleteDeviceNotification
 >;
-export type ADSDeviceNotificationPacket = ADSPacketBase<
+export type ADSDeviceNotificationRequestPacket = ADSPacketBase<
   ADSDeviceNotificationPayload,
   ADSCommand.DeviceNotification
 >;
 
-export type ADSPacket =
-  | ADSReadPacket
-  | ADSReadDeviceInfoPacket
-  | ADSReadStatePacket
-  | ADSReadWritePacket
-  | ADSWritePacket
-  | ADSWriteControlPacket
-  | ADSAddDeviceNotificationPacket
-  | ADSDeleteNotificationPacket
-  | ADSDeviceNotificationPacket;
+export type ADSRequestPacket =
+  | ADSReadRequestPacket
+  | ADSReadDeviceInfoRequestPacket
+  | ADSReadStateRequestPacket
+  | ADSReadWriteRequestPacket
+  | ADSWriteRequestPacket
+  | ADSWriteControlRequestPacket
+  | ADSAddDeviceNotificationRequestPacket
+  | ADSDeleteNotificationRequestPacket
+  | ADSDeviceNotificationRequestPacket;
 
-const computeAllocation = (packet: ADSPacket): [number, MarshalDirective[]] => {
+const computeRequestAllocation = (
+  packet: ADSRequestPacket
+): [number, MarshalDirective[]] => {
   const AMSTCPHeaderSize = 6;
   const AMSHeaderSize = 32;
   const baseSize = AMSTCPHeaderSize + AMSHeaderSize;
@@ -167,7 +175,7 @@ const computeAllocation = (packet: ADSPacket): [number, MarshalDirective[]] => {
   }
 };
 
-export const serialize = (packet: ADSPacket) => {
-  const [size, directives] = computeAllocation(packet);
+export const serializeRequest = (packet: ADSRequestPacket) => {
+  const [size, directives] = computeRequestAllocation(packet);
   return marshal().o2b(packet, Buffer.alloc(size), directives);
 };
