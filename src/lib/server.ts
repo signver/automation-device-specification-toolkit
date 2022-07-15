@@ -49,9 +49,9 @@ const createADSContext = (
 };
 
 let server: Nullable<Server> = null;
+const handlers = createChain<ADSContext>();
 const factory = () => {
   if (!server) {
-    const handler = createChain<ADSContext>();
     server = createServer((socket) => {
       socket.on('data', (data) => {
         const packet = deserialize(data);
@@ -61,7 +61,7 @@ const factory = () => {
             packet as ADSRequestPacket,
             data
           );
-          handler.dispatch(context);
+          handlers.dispatch(context);
         }
       });
       socket.on('error', (error) => {
@@ -72,7 +72,13 @@ const factory = () => {
       // TODO
     });
   }
-  return server;
+  return {
+    listen: (port: number = NetworkPort.TCP, host: string = '0.0.0.0') => {
+      server && !server?.listening && server.listen(port, host);
+    },
+    attach: handlers.attach,
+    detach: handlers.detach,
+  };
 };
 
 export default factory;
