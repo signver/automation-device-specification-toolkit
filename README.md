@@ -10,7 +10,7 @@ The main idea is to integrate the NodeJS application with this library, a HTTP s
 
 ## TODO
 
-Implement the ADS client. 
+Implement the ADS client (this doesn't affect the server capabilities). 
 
 # Usage guide
 
