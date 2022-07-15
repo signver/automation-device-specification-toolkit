@@ -2,6 +2,13 @@ import { MarshalDirective, marshal } from '../../utils';
 import { ADSPacket, ADSRequestPacket, ADSResponsePacket } from './types';
 import { isADSResponsePacket } from './utils';
 import ADSCommand from '../ads-command';
+import {
+  amsNetIdFromBuffer,
+  AMSNetIDString,
+  amsNetIdToBuffer,
+  parseAMSNetId,
+  stringifyAMSNetId,
+} from '../ams-net-id';
 
 const getBasePacketAllocation = (): [number, MarshalDirective[]] => {
   const AMSTCPHeaderSize = 6;
@@ -15,14 +22,44 @@ const getBasePacketAllocation = (): [number, MarshalDirective[]] => {
         offset: 2,
         primitive: { float: false, signed: false, string: false },
       },
-      { accessor: 'targetNetId', bytes: 6, offset: 6 },
+      {
+        accessor: 'targetNetId',
+        bytes: 6,
+        offset: 6,
+        transform: {
+          asBuffer(value) {
+            return amsNetIdToBuffer(parseAMSNetId(value) ?? [0, 0, 0, 0, 0, 0]);
+          },
+          fromBuffer(buffer) {
+            return (
+              stringifyAMSNetId(amsNetIdFromBuffer(buffer)) ??
+              ('0.0.0.0.0.0' as AMSNetIDString)
+            );
+          },
+        },
+      },
       {
         accessor: 'targetPort',
         bytes: 2,
         offset: 12,
         primitive: { float: false, signed: false, string: false },
       },
-      { accessor: 'sourceNetId', bytes: 6, offset: 14 },
+      {
+        accessor: 'sourceNetId',
+        bytes: 6,
+        offset: 14,
+        transform: {
+          asBuffer(value) {
+            return amsNetIdToBuffer(parseAMSNetId(value) ?? [0, 0, 0, 0, 0, 0]);
+          },
+          fromBuffer(buffer) {
+            return (
+              stringifyAMSNetId(amsNetIdFromBuffer(buffer)) ??
+              ('0.0.0.0.0.0' as AMSNetIDString)
+            );
+          },
+        },
+      },
       {
         accessor: 'sourcePort',
         bytes: 2,
@@ -244,9 +281,9 @@ const computePacketAllocation = (
 
 export const serialize = (packet: ADSPacket) => {
   const [size, directives] = computePacketAllocation(packet);
-  const resultantBuffer = Buffer.alloc(size)
+  const resultantBuffer = Buffer.alloc(size);
   marshal().o2b(packet, resultantBuffer, directives);
-  return resultantBuffer
+  return resultantBuffer;
 };
 
 const deserializeRequest = (buffer: Buffer, packet: ADSPacket) => {

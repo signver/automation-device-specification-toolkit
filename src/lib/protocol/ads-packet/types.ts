@@ -1,4 +1,5 @@
 import { CombineWithPreset } from '../../utils';
+import { AMSNetIDString } from '../ams-net-id';
 import ADSCommand from '../ads-command';
 import ADSState from '../ads-state';
 import ADSTransmissionMode from '../ads-transmission-mode';
@@ -8,9 +9,9 @@ export type AMSTCPHeader = {
 };
 
 export type AMSHeader = {
-  targetNetId: any;
+  targetNetId: AMSNetIDString;
   targetPort: number;
-  sourceNetId: any;
+  sourceNetId: AMSNetIDString;
   sourcePort: number;
   command: ADSCommand;
   state: number;

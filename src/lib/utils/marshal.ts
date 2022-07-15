@@ -4,6 +4,10 @@ export type MarshalDirective = {
   accessor: string;
   bytes: number;
   offset: number;
+  transform?: {
+    asBuffer: (value: any) => Buffer;
+    fromBuffer: (buffer: Buffer) => any;
+  };
   primitive?: {
     float: boolean;
     signed: boolean;
@@ -27,6 +31,12 @@ export default ({
       const value = obj.get(object, directive.accessor);
       if (Buffer.isBuffer(value)) {
         value.copy(buffer, directive.offset, 0, directive.bytes);
+        continue;
+      }
+      if (directive.transform) {
+        directive.transform
+          .asBuffer(value)
+          .copy(buffer, directive.offset, 0, directive.bytes);
         continue;
       }
       switch (typeof value) {
@@ -93,6 +103,19 @@ export default ({
   b2o: <T extends {} = any>(buffer: Buffer, directives: MarshalDirective[]) => {
     const data = {};
     for (const directive of directives) {
+      if (directive.transform) {
+        obj.set(
+          data,
+          directive.accessor,
+          directive.transform.fromBuffer(
+            buffer.subarray(
+              directive.offset,
+              directive.offset + directive.bytes
+            )
+          )
+        );
+        continue;
+      }
       if (!directive.primitive) {
         const slice = Buffer.alloc(directive.bytes);
         buffer.copy(
@@ -101,12 +124,7 @@ export default ({
           directive.offset,
           directive.offset + directive.bytes
         );
-        obj.set(
-          data,
-          directive.accessor,
-
-          slice
-        );
+        obj.set(data, directive.accessor, slice);
         continue;
       }
       if (directive.primitive.string) {
