@@ -4,10 +4,11 @@ export type MarshalDirective = {
   accessor: string;
   bytes: number;
   offset: number;
-  primitive?: Partial<{
+  primitive?: {
     float: boolean;
     signed: boolean;
-  }>;
+    string: boolean;
+  };
 };
 
 export default ({
@@ -87,5 +88,135 @@ export default ({
         }
       }
     }
+  },
+  b2o: <T extends {} = any>(buffer: Buffer, directives: MarshalDirective[]) => {
+    const data = {};
+    for (const directive of directives) {
+      if (!directive.primitive) {
+        obj.set(
+          data,
+          directive.accessor,
+          Buffer.from(buffer, directive.offset, directive.bytes)
+        );
+        break;
+      }
+      if (directive.primitive.string) {
+        obj.set(
+          data,
+          directive.accessor,
+          buffer.toString(
+            'ascii',
+            directive.offset,
+            directive.offset + directive.bytes + (nullTerminatedStrings ? 1 : 0)
+          )
+        );
+        break;
+      }
+      if (directive.primitive.float) {
+        switch (directive.bytes) {
+          case 4:
+            obj.set(
+              data,
+              directive.accessor,
+              bigEndian
+                ? buffer.readFloatBE(directive.offset)
+                : buffer.readFloatLE(directive.offset)
+            );
+            break;
+          case 8:
+            obj.set(
+              data,
+              directive.accessor,
+              bigEndian
+                ? buffer.readDoubleBE(directive.offset)
+                : buffer.readDoubleLE(directive.offset)
+            );
+            break;
+          default:
+            break;
+        }
+        break;
+      }
+      if (directive.primitive.signed) {
+        switch (directive.bytes) {
+          case 1:
+            obj.set(
+              data,
+              directive.accessor,
+              buffer.readInt8(directive.offset)
+            );
+            break;
+          case 2:
+            obj.set(
+              data,
+              directive.accessor,
+              bigEndian
+                ? buffer.readInt16BE(directive.offset)
+                : buffer.readInt16LE(directive.offset)
+            );
+            break;
+          case 4:
+            obj.set(
+              data,
+              directive.accessor,
+              bigEndian
+                ? buffer.readInt32BE(directive.offset)
+                : buffer.readInt32LE(directive.offset)
+            );
+            break;
+          case 8:
+            obj.set(
+              data,
+              directive.accessor,
+              bigEndian
+                ? buffer.readBigInt64BE(directive.offset)
+                : buffer.readBigInt64LE(directive.offset)
+            );
+            break;
+          default:
+            break;
+        }
+        break;
+      }
+      switch (directive.bytes) {
+        case 1:
+          obj.set(
+            data,
+            directive.accessor,
+            buffer.readUInt8(directive.offset)
+          );
+          break;
+        case 2:
+          obj.set(
+            data,
+            directive.accessor,
+            bigEndian
+              ? buffer.readUInt16BE(directive.offset)
+              : buffer.readUInt16LE(directive.offset)
+          );
+          break;
+        case 4:
+          obj.set(
+            data,
+            directive.accessor,
+            bigEndian
+              ? buffer.readUInt32BE(directive.offset)
+              : buffer.readUInt32LE(directive.offset)
+          );
+          break;
+        case 8:
+          obj.set(
+            data,
+            directive.accessor,
+            bigEndian
+              ? buffer.readBigUInt64BE(directive.offset)
+              : buffer.readBigUInt64LE(directive.offset)
+          );
+          break;
+        default:
+          break;
+      }
+    }
+    return data as T;
   },
 });
