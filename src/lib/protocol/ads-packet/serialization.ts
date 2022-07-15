@@ -244,7 +244,9 @@ const computePacketAllocation = (
 
 export const serialize = (packet: ADSPacket) => {
   const [size, directives] = computePacketAllocation(packet);
-  return marshal().o2b(packet, Buffer.alloc(size), directives);
+  const resultantBuffer = Buffer.alloc(size)
+  marshal().o2b(packet, resultantBuffer, directives);
+  return resultantBuffer
 };
 
 const deserializeRequest = (buffer: Buffer, packet: ADSPacket) => {
