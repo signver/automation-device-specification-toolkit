@@ -6,6 +6,12 @@ A TCP server implementing the ADS protocol as designed by [Beckhoff](https://www
 
 Hopefully this helps you as a system integrator trying to build your own web-based UI.
 
+The main idea is to integrate the NodeJS application with this library, a HTTP server (e.g. Express), and your web UI (e.g. some React app). Let the application act as the hub where the PLC will store and send data via ADS, while the web UI can similarly share access to said data via HTTP. 
+
+## TODO
+
+Implement the ADS client. 
+
 # Usage guide
 
 This will not work if the NodeJS is running on the local machine. If it needs to be hosted on the local machine, one way might be to spin up a VM to host the NodeJS application. 
