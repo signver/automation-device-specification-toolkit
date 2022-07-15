@@ -1,5 +1,5 @@
 {
-  "name": "@blubberfish/ads-toolkit",
+  "name": "@signver/ads-toolkit",
   "version": "1.0.0",
   "description": "NodeJS implementation of as Automation Device Specification compatible server.",
   "main": "dist/index.js",
