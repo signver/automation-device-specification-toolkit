@@ -1,4 +1,4 @@
-import { MarshalDirective, marshal } from 'lib/utils';
+import { MarshalDirective, marshal } from '../../utils';
 import { ADSPacket, ADSRequestPacket, ADSResponsePacket } from './types';
 import { isADSResponsePacket } from './utils';
 import ADSCommand from '../ads-command';

@@ -1,4 +1,4 @@
-import { Nullable } from 'lib/utils';
+import { Nullable } from '../utils';
 
 export type AMSNetID = [number, number, number, number, number, number];
 
