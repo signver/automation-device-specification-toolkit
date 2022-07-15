@@ -288,16 +288,16 @@ export const serialize = (packet: ADSPacket) => {
 
 const deserializeRequest = (buffer: Buffer, packet: ADSPacket) => {
   const [, directives] = computeRequestAllocation(packet as ADSRequestPacket);
-  return marshal().b2o(buffer, directives);
+  return marshal().b2o(buffer, directives) as ADSRequestPacket;
 };
 const deserializeResponse = (buffer: Buffer, packet: ADSPacket) => {
   const [, directives] = computeResponseAllocation(packet as ADSResponsePacket);
-  return marshal().b2o(buffer, directives);
+  return marshal().b2o(buffer, directives) as ADSResponsePacket;
 };
-export const deserialize = (buffer: Buffer) => {
+export const deserialize = (buffer: Buffer): ADSPacket => {
   const [, baseDirectives] = getBasePacketAllocation();
   const packetHeader = marshal().b2o(buffer, baseDirectives) as ADSPacket;
   if (isADSResponsePacket(packetHeader))
-    return deserializeResponse(buffer, packetHeader);
-  return deserializeRequest(buffer, packetHeader);
+    return deserializeResponse(buffer, packetHeader) as ADSPacket;
+  return deserializeRequest(buffer, packetHeader) as ADSPacket;
 };
