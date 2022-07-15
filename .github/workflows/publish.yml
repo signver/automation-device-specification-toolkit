@@ -1,18 +1,6 @@
 on:
   workflow_dispatch:
 jobs:
-  UnitTest: 
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.5.1
-        with:
-          node-version: 16
-          registry-url: 'https://registry.npmjs.org'
-      - name: Unit Test
-        run: |
-          npm ci
-          npm test
   Build-And-Deploy:
     runs-on: ubuntu-latest
     steps:
