@@ -19,28 +19,28 @@ export type AMSHeader = {
   invocationId: number;
 };
 
-export type ADSReadPayload = {
+export type ADSReadRequestPayload = {
   indexGroup: number;
   indexOffset: number;
   readLength: number;
 };
-export type ADSReadWritePayload = {
+export type ADSReadWriteRequestPayload = {
   indexGroup: number;
   indexOffset: number;
   readLength: number;
   data: Buffer;
 };
-export type ADSWritePayload = {
+export type ADSWriteRequestPayload = {
   indexGroup: number;
   indexOffset: number;
   data: Buffer;
 };
-export type ADSWriteControlPayload = {
+export type ADSWriteControlRequestPayload = {
   adsState: ADSState;
   deviceState: number;
   data: Buffer;
 };
-export type ADSAddDeviceNotificationPayload = {
+export type ADSAddDeviceNotificationRequestPayload = {
   indexGroup: number;
   indexOffset: number;
   readLength: number;
@@ -48,10 +48,10 @@ export type ADSAddDeviceNotificationPayload = {
   maxDelay: number;
   cycleTime: number;
 };
-export type ADSDeleteDeviceNotificationPayload = {
+export type ADSDeleteDeviceNotificationRequestPayload = {
   handle: number;
 };
-export type ADSDeviceNotificationPayload = {
+export type ADSDeviceNotificationRequestPayload = {
   handle: number;
 };
 
@@ -65,7 +65,7 @@ export type ADSPacketBase<
   Command
 >;
 export type ADSReadRequestPacket = ADSPacketBase<
-  ADSReadPayload,
+  ADSReadRequestPayload,
   ADSCommand.Read
 >;
 export type ADSReadDeviceInfoRequestPacket = ADSPacketBase<
@@ -74,27 +74,27 @@ export type ADSReadDeviceInfoRequestPacket = ADSPacketBase<
 >;
 export type ADSReadStateRequestPacket = ADSPacketBase<{}, ADSCommand.ReadState>;
 export type ADSReadWriteRequestPacket = ADSPacketBase<
-  ADSReadWritePayload,
+  ADSReadWriteRequestPayload,
   ADSCommand.ReadWrite
 >;
 export type ADSWriteRequestPacket = ADSPacketBase<
-  ADSWritePayload,
+  ADSWriteRequestPayload,
   ADSCommand.Write
 >;
 export type ADSWriteControlRequestPacket = ADSPacketBase<
-  ADSWriteControlPayload,
+  ADSWriteControlRequestPayload,
   ADSCommand.WriteControl
 >;
 export type ADSAddDeviceNotificationRequestPacket = ADSPacketBase<
-  ADSAddDeviceNotificationPayload,
+  ADSAddDeviceNotificationRequestPayload,
   ADSCommand.AddDeviceNotification
 >;
 export type ADSDeleteNotificationRequestPacket = ADSPacketBase<
-  ADSDeleteDeviceNotificationPayload,
+  ADSDeleteDeviceNotificationRequestPayload,
   ADSCommand.DeleteDeviceNotification
 >;
 export type ADSDeviceNotificationRequestPacket = ADSPacketBase<
-  ADSDeviceNotificationPayload,
+  ADSDeviceNotificationRequestPayload,
   ADSCommand.DeviceNotification
 >;
 
@@ -108,3 +108,35 @@ export type ADSRequestPacket =
   | ADSAddDeviceNotificationRequestPacket
   | ADSDeleteNotificationRequestPacket
   | ADSDeviceNotificationRequestPacket;
+
+export type ADSReadResponsePayload = {
+  commandError: number;
+  data: Buffer;
+};
+
+export type ADSReadWriteResponsePayload = {
+  commandError: number;
+  data: Buffer;
+};
+
+export type ADSWriteResponsePayload = {
+  commandError: number;
+};
+export type ADSReadResponsePacket = ADSPacketBase<
+  ADSReadResponsePayload,
+  ADSCommand.Read
+>;
+export type ADSReadWriteResponsePacket = ADSPacketBase<
+  ADSReadWriteResponsePayload,
+  ADSCommand.ReadWrite
+>;
+export type ADSWriteResponsePacket = ADSPacketBase<
+  ADSWriteResponsePayload,
+  ADSCommand.Write
+>;
+export type ADSResponsePacket =
+  | ADSReadResponsePacket
+  | ADSReadWriteResponsePacket
+  | ADSWriteResponsePacket;
+
+export type ADSPacket = ADSRequestPacket | ADSReadResponsePacket;

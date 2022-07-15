@@ -1,7 +1,7 @@
 import { MarshalDirective, marshal } from 'lib/utils';
-import { ADSRequestPacket } from './types'
+import { ADSPacket, ADSRequestPacket, ADSResponsePacket } from './types';
+import { isADSResponsePacket } from './utils';
 import ADSCommand from '../ads-command';
-import ADSStateFlag from '../ads-state-flag';
 
 const getBasePacketAllocation = (): [number, MarshalDirective[]] => {
   const AMSTCPHeaderSize = 6;
@@ -75,16 +75,56 @@ const computeRequestAllocation = (
   }
 };
 
-const computePacketAllocation = (
-  packet: ADSRequestPacket
+const computeResponseAllocation = (
+  packet: ADSResponsePacket
 ): [number, MarshalDirective[]] => {
-  const isResponse = (ADSStateFlag.Response & packet.state) > 0;
+  const [baseSize, baseDirectives] = getBasePacketAllocation();
   // TODO
-  if (isResponse) return [0, []];
-  return computeRequestAllocation(packet);
+  switch (packet.command) {
+    case ADSCommand.Read:
+      return [
+        baseSize + 4 + 4 + packet.data.length,
+        [
+          { accessor: 'commandError', bytes: 4, offset: baseSize + 0 },
+          { accessor: 'data.length', bytes: 4, offset: baseSize + 4 },
+          {
+            accessor: 'data',
+            bytes: packet.data.length,
+            offset: baseSize + 4 + 4,
+          },
+        ],
+      ];
+    case ADSCommand.ReadWrite:
+      return [
+        baseSize + 4 + 4 + packet.data.length,
+        [
+          { accessor: 'commandError', bytes: 4, offset: baseSize + 0 },
+          { accessor: 'data.length', bytes: 4, offset: baseSize + 4 },
+          {
+            accessor: 'data',
+            bytes: packet.data.length,
+            offset: baseSize + 4 + 4,
+          },
+        ],
+      ];
+    case ADSCommand.Write:
+      return [
+        baseSize + 4,
+        [{ accessor: 'commandError', bytes: 4, offset: baseSize + 0 }],
+      ];
+    default:
+      return [baseSize, [...baseDirectives]];
+  }
 };
 
-export const serialize = (packet: ADSRequestPacket) => {
+const computePacketAllocation = (
+  packet: ADSPacket
+): [number, MarshalDirective[]] =>
+  isADSResponsePacket(packet)
+    ? computeResponseAllocation(packet as ADSResponsePacket)
+    : computeRequestAllocation(packet as ADSRequestPacket);
+
+export const serialize = (packet: ADSPacket) => {
   const [size, directives] = computePacketAllocation(packet);
   return marshal().o2b(packet, Buffer.alloc(size), directives);
 };
