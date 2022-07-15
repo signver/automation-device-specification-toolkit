@@ -28,16 +28,19 @@ export type ADSReadWriteRequestPayload = {
   indexGroup: number;
   indexOffset: number;
   readLength: number;
+  writeLength: number;
   data: Buffer;
 };
 export type ADSWriteRequestPayload = {
   indexGroup: number;
   indexOffset: number;
+  writeLength: number;
   data: Buffer;
 };
 export type ADSWriteControlRequestPayload = {
   adsState: ADSState;
   deviceState: number;
+  writeLength: number;
   data: Buffer;
 };
 export type ADSAddDeviceNotificationRequestPayload = {
@@ -111,11 +114,13 @@ export type ADSRequestPacket =
 
 export type ADSReadResponsePayload = {
   commandError: number;
+  dataLength: number;
   data: Buffer;
 };
 
 export type ADSReadWriteResponsePayload = {
   commandError: number;
+  dataLength: number;
   data: Buffer;
 };
 
