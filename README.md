@@ -16,7 +16,7 @@ Implement the ADS client (this doesn't affect the server capabilities).
 
 `npm i @signver/ads-toolkit`
 
-This will not work if the NodeJS is running on the local machine. If it needs to be hosted on the local machine, one way might be to spin up a VM to host the NodeJS application. 
+This will not work if the NodeJS is running on the local machine. If it needs to be hosted on the local machine, one way might be to spin up a VM to host the NodeJS application. The VM will likely need a bridged network adapter (i.e. a seperately emulated network adapter0. 
 
 After creating and starting your NodeJS application, you will need to add the appropriate ADS route to the PLC routing table as specified in their manual. 
 
