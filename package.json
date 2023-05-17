@@ -19,5 +19,9 @@
   },
   "dependencies": {
     "@signver/handle-chain": "^2.0.0"
-  }
+  },
+  "workspaces": [
+    "lib/protocol",
+    "lib/ads/router"
+  ]
 }
