@@ -55,6 +55,10 @@ describe("AMSMessagePacket", () => {
             packet.dataLength()
             expect(packet.dataLength(900).dataLength()).toStrictEqual(900)
         })
+        it("should limit value to uint16", () => {
+            const packet = new AMSMessagePacket()
+            expect(() => { packet.dataLength(0xffffffff) }).toThrow()
+        })
     })
     describe(".errorCode", () => {
         it("should read and write corrent", () => {
@@ -62,12 +66,20 @@ describe("AMSMessagePacket", () => {
             packet.errorCode()
             expect(packet.errorCode(900).errorCode()).toStrictEqual(900)
         })
+        it("should limit value to uint16", () => {
+            const packet = new AMSMessagePacket()
+            expect(() => { packet.errorCode(0xffffffff) }).toThrow()
+        })
     })
     describe(".invokeID", () => {
         it("should read and write corrent", () => {
             const packet = new AMSMessagePacket()
             packet.invokeID()
             expect(packet.invokeID(900).invokeID()).toStrictEqual(900)
+        })
+        it("should limit value to uint16", () => {
+            const packet = new AMSMessagePacket()
+            expect(() => { packet.invokeID(0xffffffff) }).toThrow()
         })
     })
 })

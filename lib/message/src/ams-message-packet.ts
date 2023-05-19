@@ -60,6 +60,12 @@ export class AMSMessagePacket implements IAMSFlags, IAMSMessageSender, IAMSMessa
     private adsFrom = new AMSNetAddress()
     private adsTo = new AMSNetAddress()
 
+    private allowOnlyUint16(n: number) {
+        const rounded = Math.round(n)
+        if (n < 0 || n > 0xffff) throw new Error(/**@todo */)
+        return n
+    }
+
     public constructor() {
         this.adsData = new AMSMessageData(this)
     }
@@ -160,7 +166,7 @@ export class AMSMessagePacket implements IAMSFlags, IAMSMessageSender, IAMSMessa
     public dataLength(l: number): IAMSMessagePacket
     public dataLength(l?: number) {
         if (typeof l === 'number') {
-            this.adsDataLength = l
+            this.adsDataLength = this.allowOnlyUint16(l)
             return this as IAMSMessagePacket
         }
         return this.adsDataLength
@@ -169,7 +175,7 @@ export class AMSMessagePacket implements IAMSFlags, IAMSMessageSender, IAMSMessa
     public errorCode(n: number): IAMSMessagePacket
     public errorCode(n?: number) {
         if (typeof n === 'number') {
-            this.adsErrorCode = n
+            this.adsErrorCode = this.allowOnlyUint16(n)
             return this as IAMSMessagePacket
         }
         return this.adsErrorCode
@@ -178,7 +184,7 @@ export class AMSMessagePacket implements IAMSFlags, IAMSMessageSender, IAMSMessa
     public invokeID(n: number): IAMSMessagePacket
     public invokeID(n?: number) {
         if (typeof n === 'number') {
-            this.adsInvokeID = n
+            this.adsInvokeID = this.allowOnlyUint16(n)
             return this as IAMSMessagePacket
         }
         return this.adsInvokeID
