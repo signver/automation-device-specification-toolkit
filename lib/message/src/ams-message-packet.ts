@@ -1,3 +1,4 @@
+import { rangeOfUint16 } from '@signver/assert/numbers'
 import { AMSNetAddress } from '@signver/ams-address'
 import { AMSMessageData } from './ams-message-data'
 import { DataEvent, Command, Flag } from './constants'
@@ -66,12 +67,6 @@ export class AMSMessagePacket implements IAMSMessageFlags, IAMSMessageSender, IA
     private adsInvokeID: number = 0
     private adsFrom = new AMSNetAddress()
     private adsTo = new AMSNetAddress()
-
-    private allowOnlyUint16(n: number) {
-        const rounded = Math.round(n)
-        if (rounded < 0 || rounded > 0xffff) throw new Error(/**@todo */)
-        return rounded
-    }
 
     public constructor() {
         this.adsData = new AMSMessageData(this)
@@ -183,7 +178,7 @@ export class AMSMessagePacket implements IAMSMessageFlags, IAMSMessageSender, IA
     public dataLength(l: number): IAMSMessagePacket
     public dataLength(l?: number) {
         if (typeof l === 'number') {
-            this.adsDataLength = this.allowOnlyUint16(l)
+            this.adsDataLength = rangeOfUint16(l)
             return this as IAMSMessagePacket
         }
         return this.adsDataLength
@@ -192,7 +187,7 @@ export class AMSMessagePacket implements IAMSMessageFlags, IAMSMessageSender, IA
     public errorCode(n: number): IAMSMessagePacket
     public errorCode(n?: number) {
         if (typeof n === 'number') {
-            this.adsErrorCode = this.allowOnlyUint16(n)
+            this.adsErrorCode = rangeOfUint16(n)
             return this as IAMSMessagePacket
         }
         return this.adsErrorCode
@@ -201,7 +196,7 @@ export class AMSMessagePacket implements IAMSMessageFlags, IAMSMessageSender, IA
     public invokeID(n: number): IAMSMessagePacket
     public invokeID(n?: number) {
         if (typeof n === 'number') {
-            this.adsInvokeID = this.allowOnlyUint16(n)
+            this.adsInvokeID = rangeOfUint16(n)
             return this as IAMSMessagePacket
         }
         return this.adsInvokeID
