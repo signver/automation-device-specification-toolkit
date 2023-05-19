@@ -27,6 +27,9 @@ export class AMSMessagePacket implements IAMSMessagePacket {
     private adsFlags: number = Flag.Command
 
     // Commands
+    public get command() {
+        return this.adsCommand
+    }
     public get readDeviceInfo() {
         this.adsCommand = Command.ReadDeviceInfo
         return this
