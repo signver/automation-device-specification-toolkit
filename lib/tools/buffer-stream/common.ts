@@ -6,6 +6,7 @@ export interface IBufferStreamIOOP {
 
 export interface IBufferStreamOptions {
     expand?: boolean
+    increment?: number
     size: number
 }
 

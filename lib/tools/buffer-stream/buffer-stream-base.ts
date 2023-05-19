@@ -28,7 +28,7 @@ export abstract class BufferStreamBase {
     private buffer: ArrayBuffer
     private bufferView: DataView
     private position = 0
-    private increment = 128
+    private increment: number
 
     private expand() {
         const expanded = new ArrayBuffer(this.buffer.byteLength + this.increment)
@@ -77,8 +77,9 @@ export abstract class BufferStreamBase {
         this.seek(bytes)
     }
 
-    constructor({ expand, size }: IBufferStreamOptions) {
+    constructor({ expand, increment, size }: IBufferStreamOptions) {
         this.expandable = expand || false
+        this.increment = Math.max(increment ?? 0, 0) || 128
         this.buffer = new ArrayBuffer(size)
         this.bufferView = new DataView(this.buffer)
     }
