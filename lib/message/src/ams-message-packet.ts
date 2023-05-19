@@ -1,5 +1,21 @@
-import { AMSMessageData, IAMSMessageData } from './ams-message-data'
+import { AMSNetAddress } from '@signver/ams-address'
+import { AMSMessageData } from './ams-message-data'
 import { Command, Flag } from './constants'
+
+interface IAMSMessagePacket {
+    dataLength: {
+        (): number
+        (l: number): IAMSMessagePacket
+    }
+    errorCode: {
+        (): number
+        (l: number): IAMSMessagePacket
+    }
+    invokeID: {
+        (): number
+        (l: number): IAMSMessagePacket
+    }
+}
 
 interface IAMSCommand {
     readDeviceInfo: IAMSMessagePacket
@@ -13,18 +29,69 @@ interface IAMSCommand {
     readWrite: IAMSMessagePacket
 }
 
-interface IAMSFlags {
-    reqFlag: IAMSMessagePacket
-    resFlag: IAMSMessagePacket
-    tcpFlag: IAMSMessagePacket
-    udpFlag: IAMSMessagePacket
+interface IAMSMessageReceiver {
+    to: {
+        (): AMSNetAddress
+        (n: string, port: number): IAMSCommand
+    }
 }
 
-interface IAMSMessagePacket extends IAMSCommand, IAMSFlags {}
+interface IAMSMessageSender {
+    from: {
+        (): AMSNetAddress
+        (n: string, port: number): IAMSMessageReceiver
+    }
+}
 
-export class AMSMessagePacket implements IAMSMessagePacket {
+interface IAMSFlags {
+    tcpReqFlag: IAMSMessageSender
+    tcpResFlag: IAMSMessageSender
+    udpReqFlag: IAMSMessageSender
+    udpResFlag: IAMSMessageSender
+}
+
+export class AMSMessagePacket implements IAMSFlags, IAMSMessageSender, IAMSMessageReceiver, IAMSCommand, IAMSMessagePacket {
     private adsCommand: number = Command.Invalid
     private adsFlags: number = Flag.Command
+    private adsData: AMSMessageData<IAMSMessagePacket>
+    private adsDataLength: number = 0
+    private adsErrorCode: number = 0
+    private adsInvokeID: number = 0
+    private adsFrom = new AMSNetAddress()
+    private adsTo = new AMSNetAddress()
+
+    public constructor() {
+        this.adsData = new AMSMessageData(this)
+    }
+
+    // Addressing 
+    public from(): AMSNetAddress
+    public from(n: string, port: number): IAMSMessageReceiver
+    public from(n?: string, port?: number) {
+        if (typeof n === 'string' && typeof port === 'number') {
+            this.adsFrom.octet(n)
+            this.adsFrom.port = port
+            return this as IAMSMessageReceiver
+        }
+        const clone = new AMSNetAddress()
+        clone.port = this.adsFrom.port
+        clone.octet(this.adsFrom.octet().join('.'))
+        return clone
+    }
+
+    public to(): AMSNetAddress
+    public to(n: string, port: number): IAMSCommand
+    public to(n?: string, port?: number) {
+        if (typeof n === 'string' && typeof port === 'number') {
+            this.adsTo.octet(n)
+            this.adsTo.port = port
+            return this as IAMSCommand
+        }
+        const clone = new AMSNetAddress()
+        clone.port = this.adsTo.port
+        clone.octet(this.adsTo.octet().join('.'))
+        return clone
+    }
 
     // Commands
     public get command() {
@@ -71,20 +138,49 @@ export class AMSMessagePacket implements IAMSMessagePacket {
     public get flags() {
         return this.adsFlags
     }
-    public get reqFlag() {
-        this.adsFlags = this.adsFlags & (0xff ^ Flag.Response)
+    public get tcpReqFlag() {
+        this.adsFlags = Flag.Command | Flag.Request | Flag.TCP
         return this
     }
-    public get resFlag() {
-        this.adsFlags = this.adsFlags | Flag.Response
+    public get tcpResFlag() {
+        this.adsFlags = Flag.Command | Flag.Response | Flag.TCP
         return this
     }
-    public get tcpFlag() {
-        this.adsFlags = this.adsFlags & (0xff ^ Flag.UDP)
+    public get udpReqFlag() {
+        this.adsFlags = Flag.Command | Flag.Request | Flag.UDP
         return this
     }
-    public get udpFlag() {
-        this.adsFlags = this.adsFlags | Flag.UDP
+    public get udpResFlag() {
+        this.adsFlags = Flag.Command | Flag.Response | Flag.UDP
         return this
+    }
+
+    // Others
+    public dataLength(): number
+    public dataLength(l: number): IAMSMessagePacket
+    public dataLength(l?: number) {
+        if (typeof l === 'number') {
+            this.adsDataLength = l
+            return this as IAMSMessagePacket
+        }
+        return this.adsDataLength
+    }
+    public errorCode(): number
+    public errorCode(n: number): IAMSMessagePacket
+    public errorCode(n?: number) {
+        if (typeof n === 'number') {
+            this.adsErrorCode = n
+            return this as IAMSMessagePacket
+        }
+        return this.adsErrorCode
+    }
+    public invokeID(): number
+    public invokeID(n: number): IAMSMessagePacket
+    public invokeID(n?: number) {
+        if (typeof n === 'number') {
+            this.adsInvokeID = n
+            return this as IAMSMessagePacket
+        }
+        return this.adsInvokeID
     }
 }

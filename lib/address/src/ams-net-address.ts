@@ -23,5 +23,14 @@ export class AMSNetAddress extends AMSNetID {
             )
         )
     }
+
+    public override octet(): number[]
+    public override octet(n: number): number
+    public override octet(n: string): AMSNetAddress
+    public override octet(n: number, b: number): AMSNetAddress
+    public override octet(n: number, b: string): AMSNetAddress
+    public override octet(n?: string | number, b?: string | number): number | AMSNetAddress | number[] {
+        return (super.octet as any)(n, b)
+    }
     
 }

@@ -12,4 +12,9 @@ describe("AMSNetAddress", () => {
         }).not.toThrow()
         expect(addr.port).toStrictEqual(0xffff)
     })
+
+    it("should return self", () => {
+        const addr = new AMSNetAddress()
+        expect(addr.octet('192.168.0.1.1.1')).toStrictEqual(addr)
+    })
 })
