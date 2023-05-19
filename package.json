@@ -23,6 +23,7 @@
   "workspaces": [
     ".",
     "lib/tools/buffer-stream",
-    "lib/address"
+    "lib/address",
+    "lib/message"
   ]
 }
