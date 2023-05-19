@@ -201,8 +201,3 @@ export class AMSMessagePacket implements IAMSMessageFlags, IAMSMessageSender, IA
         return this.adsInvokeID
     }
 }
-
-/* istanbul ignore next */
-export function createAMSMessagePacket() {
-    return new AMSMessagePacket() as IAMSMessageFlags
-}
