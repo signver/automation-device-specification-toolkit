@@ -7,15 +7,12 @@ describe("AMSMessagePacket", () => {
             const packet = new AMSMessagePacket()
             expect(packet.flags).toStrictEqual(Flag.Command)
         })
-        it("should toggle the response bit", () => {
+        it("should set the bits", () => {
             const packet = new AMSMessagePacket()
-            expect(packet.resFlag.flags).toStrictEqual(Flag.Command | Flag.Response)
-            expect(packet.reqFlag.flags).toStrictEqual(Flag.Command | Flag.Request)
-        })
-        it("should toggle the udp bit", () => {
-            const packet = new AMSMessagePacket()
-            expect(packet.udpFlag.flags).toStrictEqual(Flag.Command | Flag.UDP)
-            expect(packet.tcpFlag.flags).toStrictEqual(Flag.Command | Flag.TCP)
+            expect(packet.tcpReqFlag.flags).toStrictEqual(Flag.Command | Flag.Request | Flag.TCP)
+            expect(packet.tcpResFlag.flags).toStrictEqual(Flag.Command | Flag.Response | Flag.TCP)
+            expect(packet.udpReqFlag.flags).toStrictEqual(Flag.Command | Flag.Request | Flag.UDP)
+            expect(packet.udpResFlag.flags).toStrictEqual(Flag.Command | Flag.Response | Flag.UDP)
         })
     })
     describe(".command", () => {
@@ -34,6 +31,43 @@ describe("AMSMessagePacket", () => {
             expect(packet.readWrite.command).toStrictEqual(Command.ReadWrite)
             expect(packet.write.command).toStrictEqual(Command.Write)
             expect(packet.writeControl.command).toStrictEqual(Command.WriteControl)
+        })
+    })
+    describe(".from", () => {
+        it("should set the from address", () => {
+            const packet = new AMSMessagePacket()
+            packet.from('192.168.0.1.1.1', 200)
+            expect(packet.from().octet()).toEqual(expect.arrayContaining([192, 168, 0, 1, 1, 1]))
+            expect(packet.from().port).toStrictEqual(200)
+        })
+    })
+    describe(".to", () => {
+        it("should set the from address", () => {
+            const packet = new AMSMessagePacket()
+            packet.to('192.168.0.1.1.1', 200)
+            expect(packet.to().octet()).toEqual(expect.arrayContaining([192, 168, 0, 1, 1, 1]))
+            expect(packet.to().port).toStrictEqual(200)
+        })
+    })
+    describe(".dataLength", () => {
+        it("should read and write corrent", () => {
+            const packet = new AMSMessagePacket()
+            packet.dataLength()
+            expect(packet.dataLength(900).dataLength()).toStrictEqual(900)
+        })
+    })
+    describe(".errorCode", () => {
+        it("should read and write corrent", () => {
+            const packet = new AMSMessagePacket()
+            packet.errorCode()
+            expect(packet.errorCode(900).errorCode()).toStrictEqual(900)
+        })
+    })
+    describe(".invokeID", () => {
+        it("should read and write corrent", () => {
+            const packet = new AMSMessagePacket()
+            packet.invokeID()
+            expect(packet.invokeID(900).invokeID()).toStrictEqual(900)
         })
     })
 })
