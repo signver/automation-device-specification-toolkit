@@ -24,7 +24,7 @@
     ".",
     "lib/tools/buffer-stream",
     "lib/address",
-    "lib/message",
-    "lib/tools/assert"
+    "lib/tools/assert",
+    "lib/message/core"
   ]
 }

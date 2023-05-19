@@ -1,5 +1,5 @@
 {
-  "name": "@signver/ads-message",
+  "name": "@signver/ads-message-core",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
