@@ -1,0 +1,12 @@
+{
+  "name": "@signver/buffer-stream",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chua Siang Poh",
+  "license": "MIT"
+}
