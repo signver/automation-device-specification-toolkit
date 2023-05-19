@@ -1,4 +1,4 @@
-import { AdsPacketDataEvent } from './constants'
+import { DataEvent, Command } from './constants'
 
 export interface IAMSMessageDataBufferSizeChangedHandler {
     (dataLength: number): void
@@ -7,13 +7,13 @@ export interface IAMSMessageDataBufferSizeChangedHandler {
 export interface IAMSMessageData<Packet> {
     packet: Packet
     on: {
-        (type: AdsPacketDataEvent.BufferSizeChanged, handler: IAMSMessageDataBufferSizeChangedHandler): void
+        (type: DataEvent.BufferSizeChanged, handler: IAMSMessageDataBufferSizeChangedHandler): void
     }
 }
 
 export class AMSMessageData<Parent> implements IAMSMessageData<Parent> {
     private link: Parent
-    private handle: Partial<{ [key in AdsPacketDataEvent]: Function }> = {}
+    private handle: Partial<{ [key in DataEvent]: Function }> = {}
     
     public constructor(parent: Parent) {
         this.link = parent
@@ -23,8 +23,8 @@ export class AMSMessageData<Parent> implements IAMSMessageData<Parent> {
         return this.link
     }
     
-    public on(type: AdsPacketDataEvent.BufferSizeChanged, handler: IAMSMessageDataBufferSizeChangedHandler): void
-    public on(type: AdsPacketDataEvent, handler: Function) {
+    public on(type: DataEvent.BufferSizeChanged, handler: IAMSMessageDataBufferSizeChangedHandler): void
+    public on(type: DataEvent, handler: Function) {
         this.handle[type] = handler
         return 
     }
