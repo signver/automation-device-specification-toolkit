@@ -2,7 +2,9 @@ import { AMSNetAddress } from '@signver/ams-address'
 import { AMSMessageData } from './ams-message-data'
 import { AdsPacketDataEvent, Command, Flag } from './constants'
 
-interface IAMSMessagePacket extends IAMSMessageCommand, IAMSMessageFlags, IAMSMessageMeta, IAMSMessageReceiver, IAMSMessageSender {}
+interface IAMSMessagePacket extends IAMSMessageCommand, IAMSMessageFlags, IAMSMessageMeta, IAMSMessageReceiver, IAMSMessageSender {
+    data: AMSMessageData<IAMSMessagePacket>
+}
 
 interface IAMSMessageMeta {
     dataLength: {
@@ -79,6 +81,10 @@ export class AMSMessagePacket implements IAMSMessageFlags, IAMSMessageSender, IA
                 this.adsDataLength = len + AMSMessagePacket.amsHeaderLength
             }
         )
+    }
+
+    public get data() {
+        return this.adsData
     }
 
     // Addressing 
