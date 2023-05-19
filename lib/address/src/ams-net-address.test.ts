@@ -5,12 +5,12 @@ describe("AMSNetAddress", () => {
         const addr = new AMSNetAddress()
         expect(() => {
             addr.port = -1
-        }).not.toThrow()
-        expect(addr.port).toStrictEqual(0)
+        }).toThrow()
         expect(() => {
             addr.port = 0xffff + 1
-        }).not.toThrow()
-        expect(addr.port).toStrictEqual(0xffff)
+        }).toThrow()
+        addr.port = 100
+        expect(addr.port).toStrictEqual(100)
     })
 
     it("should return self", () => {

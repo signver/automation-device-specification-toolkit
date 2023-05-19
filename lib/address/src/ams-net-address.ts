@@ -1,8 +1,7 @@
+import { rangeOfUint16 } from '@signver/assert/numbers'
 import { AMSNetID } from './ams-net-id'
 
 export class AMSNetAddress extends AMSNetID {
-    private static readonly constrainPortMin = 0
-    private static readonly constrainPortMax = 0xffff
     private amsNetPort: number
 
     public constructor() {
@@ -15,13 +14,7 @@ export class AMSNetAddress extends AMSNetID {
     }
 
     public set port(n: number) {
-        this.amsNetPort = Math.max(
-            AMSNetAddress.constrainPortMin,
-            Math.min(
-                AMSNetAddress.constrainPortMax,
-                n
-            )
-        )
+        this.amsNetPort = rangeOfUint16(n)
     }
 
     public override octet(): number[]
