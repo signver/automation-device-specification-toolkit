@@ -1,4 +1,4 @@
-import { rangeOfUint16 } from '@signver/assert/numbers'
+import { rangeOfUint32 } from '@signver/assert/numbers'
 import { AMSNetAddress } from '@signver/ams-address'
 import { AMSMessageData } from './ams-message-data'
 import { DataEvent, Command, Flag } from './constants'
@@ -178,7 +178,7 @@ export class AMSMessagePacket implements IAMSMessageFlags, IAMSMessageSender, IA
     public dataLength(l: number): IAMSMessagePacket
     public dataLength(l?: number) {
         if (typeof l === 'number') {
-            this.adsDataLength = rangeOfUint16(l)
+            this.adsDataLength = rangeOfUint32(l)
             return this as IAMSMessagePacket
         }
         return this.adsDataLength
@@ -187,7 +187,7 @@ export class AMSMessagePacket implements IAMSMessageFlags, IAMSMessageSender, IA
     public errorCode(n: number): IAMSMessagePacket
     public errorCode(n?: number) {
         if (typeof n === 'number') {
-            this.adsErrorCode = rangeOfUint16(n)
+            this.adsErrorCode = rangeOfUint32(n)
             return this as IAMSMessagePacket
         }
         return this.adsErrorCode
@@ -196,7 +196,7 @@ export class AMSMessagePacket implements IAMSMessageFlags, IAMSMessageSender, IA
     public invokeID(n: number): IAMSMessagePacket
     public invokeID(n?: number) {
         if (typeof n === 'number') {
-            this.adsInvokeID = rangeOfUint16(n)
+            this.adsInvokeID = rangeOfUint32(n)
             return this as IAMSMessagePacket
         }
         return this.adsInvokeID

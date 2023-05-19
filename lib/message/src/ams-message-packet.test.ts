@@ -57,7 +57,7 @@ describe("AMSMessagePacket", () => {
         })
         it("should limit value to uint16", () => {
             const packet = new AMSMessagePacket()
-            expect(() => { packet.dataLength(0xffffffff) }).toThrow()
+            expect(() => { packet.dataLength(0xffffffff + 1) }).toThrow()
         })
     })
     describe(".errorCode", () => {
@@ -68,7 +68,7 @@ describe("AMSMessagePacket", () => {
         })
         it("should limit value to uint16", () => {
             const packet = new AMSMessagePacket()
-            expect(() => { packet.errorCode(0xffffffff) }).toThrow()
+            expect(() => { packet.errorCode(0xffffffff + 1) }).toThrow()
         })
     })
     describe(".invokeID", () => {
@@ -79,7 +79,7 @@ describe("AMSMessagePacket", () => {
         })
         it("should limit value to uint16", () => {
             const packet = new AMSMessagePacket()
-            expect(() => { packet.invokeID(0xffffffff) }).toThrow()
+            expect(() => { packet.invokeID(0xffffffff + 1) }).toThrow()
         })
     })
 })
