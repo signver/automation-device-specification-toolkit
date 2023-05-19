@@ -2,7 +2,9 @@
   "name": "@signver/ads-toolkit",
   "version": "1.0.0",
   "description": "NodeJS implementation of as Automation Device Specification compatible server.",
-  "main": "dist/index.js",
+  "exports": {
+    "ams-address": "./lib/address"
+  },
   "scripts": {
     "test": "jest --coverage",
     "build": "tsc"
@@ -19,6 +21,8 @@
     "@signver/handle-chain": "^2.0.0"
   },
   "workspaces": [
-    "lib/tools/buffer-stream"
+    ".",
+    "lib/tools/buffer-stream",
+    "lib/address"
   ]
 }
