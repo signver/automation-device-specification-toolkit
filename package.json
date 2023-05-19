@@ -1,6 +1,6 @@
 {
   "name": "@signver/ads-toolkit",
-  "version": "1.0.0",
+  "version": "2.0.0-beta.0",
   "description": "NodeJS implementation of as Automation Device Specification compatible server.",
   "exports": {
     "ams-address": "./lib/address/src/index.ts"
