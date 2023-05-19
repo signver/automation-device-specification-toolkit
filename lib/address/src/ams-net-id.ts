@@ -8,7 +8,7 @@ export class AMSNetID {
     private assign(s?: string | null) {
         if (typeof s === 'string' && AMSNetID.validate(s)) {
             this.byteID = s.split('.').map(
-                (sb, i) => parseInt(sb)
+                (sb) => rangeOfUint8(parseInt(sb))
             )
             return this
         }
@@ -50,7 +50,7 @@ export class AMSNetID {
         }
         if (typeof b === 'string') {
             if (!AMSNetID.octetPattern.test(b)) throw new Error(/**@todo */)
-            return this.octet(n, parseInt(b))
+            return this.octet(n, rangeOfUint8(parseInt(b)))
         }
         return this.byteID[n]
     }
