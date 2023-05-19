@@ -1,7 +1,17 @@
 export class AMSNetID {
-    private static readonly octetPattern = /^(2[5][0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$/
+    private static readonly octetPattern = /^\d+$/
     private static readonly validPattern = /^(2[5][0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(?:\.(2[5][0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){5}$/
     private byteID: number[]
+
+    private assign(s?: string | null) {
+        if (typeof s === 'string' && AMSNetID.validate(s)) {
+            this.byteID = s.split('.').map(
+                (sb, i) => parseInt(sb)
+            )
+            return this
+        }
+        throw new Error(/**@todo */)
+    }
 
     public constructor() {
         this.byteID = new Array(6).fill(0)
@@ -15,20 +25,18 @@ export class AMSNetID {
     }
 
     public static parse(s?: string | null) {
-        if (s && AMSNetID.validate(s)) return new AMSNetID().assign(s)
-        throw new Error(/**@todo */)
+        return new AMSNetID().assign(s)
     }
 
     public octet(): number[]
     public octet(n: number): number
-    public octet(n: string): void
-    public octet(n: number, b: number): void
-    public octet(n: number, b: string): void
+    public octet(n: string): AMSNetID
+    public octet(n: number, b: number): AMSNetID
+    public octet(n: number, b: string): AMSNetID
     public octet(n?: number | string, b?: number | string) {
         if (typeof n === 'string') {
-            if (!AMSNetID.validate(n)) throw new Error(/**@todo */)
             this.assign(n)
-            return 
+            return this
         }
         if (typeof n !== 'number') {
             return [...this.byteID]
@@ -38,19 +46,13 @@ export class AMSNetID {
             const rounded = Math.round(b)
             if (rounded < 0 || rounded > 255) throw new Error(/**@todo */)
             this.byteID[n] = rounded
+            return this
         }
         if (typeof b === 'string') {
-            if (AMSNetID.octetPattern.test(b)) throw new Error(/**@todo */)
-            this.byteID[n] = parseInt(b)
+            if (!AMSNetID.octetPattern.test(b)) throw new Error(/**@todo */)
+            return this.octet(n, parseInt(b))
         }
         return this.byteID[n]
-    }
-
-    public assign(s: string) {
-        this.byteID = s.split('.').map(
-            (sb, i) => parseInt(sb)
-        )
-        return this
     }
 
 }
