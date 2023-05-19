@@ -62,8 +62,8 @@ export class AMSMessagePacket implements IAMSFlags, IAMSMessageSender, IAMSMessa
 
     private allowOnlyUint16(n: number) {
         const rounded = Math.round(n)
-        if (n < 0 || n > 0xffff) throw new Error(/**@todo */)
-        return n
+        if (rounded < 0 || rounded > 0xffff) throw new Error(/**@todo */)
+        return rounded
     }
 
     public constructor() {
