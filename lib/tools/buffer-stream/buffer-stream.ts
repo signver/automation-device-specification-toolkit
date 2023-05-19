@@ -5,7 +5,7 @@ export class BufferStream extends BufferStreamBase implements IBufferStreamIO {
     constructor(options: IBufferStreamOptions) {
         super(options)
     }
-
+    
     public get littleEndian() {
         super.isLittleEndian = true
         return this

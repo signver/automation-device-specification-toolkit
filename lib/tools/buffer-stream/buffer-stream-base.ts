@@ -57,7 +57,11 @@ export abstract class BufferStreamBase {
 
     protected read(options: IBufferStreamIOOP) {
         const { bytes, floatingPoint, unsigned } = options
+        // Robustness
+        /* istanbul ignore next */
         const method = floatingPoint ? BufferStreamBase.method.float[bytes]?.get : unsigned ? BufferStreamBase.method.uint[bytes]?.get : BufferStreamBase.method.int[bytes]?.get
+        // Robustness
+        /* istanbul ignore next */
         if (!method) throw new Error(/**@todo */)
         this.tryAdvance(bytes, false)
         const value = bytes > 1 ? 
@@ -69,7 +73,11 @@ export abstract class BufferStreamBase {
 
     protected write(value: number, options: IBufferStreamIOOP) {
         const { bytes, floatingPoint, unsigned } = options
+        // Robustness
+        /* istanbul ignore next */
         const method = floatingPoint ? BufferStreamBase.method.float[bytes]?.set : unsigned ? BufferStreamBase.method.uint[bytes]?.set : BufferStreamBase.method.int[bytes]?.set
+        // Robustness
+        /* istanbul ignore next */
         if (!method) throw new Error(/**@todo */)
         this.tryAdvance(bytes, this.expandable)
         if (bytes > 1) (this.bufferView[method] as MultiByteWriteMethod)(this.position, value, this.optionLittleEndian)
@@ -82,6 +90,10 @@ export abstract class BufferStreamBase {
         this.increment = Math.max(increment ?? 0, 0) || 128
         this.buffer = new ArrayBuffer(size)
         this.bufferView = new DataView(this.buffer)
+    }
+
+    public get length() {
+        return this.buffer.byteLength
     }
 
     public get endOfStream() {

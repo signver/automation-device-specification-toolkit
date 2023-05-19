@@ -10,9 +10,14 @@ export interface IBufferStreamOptions {
     size: number
 }
 
-export interface IBufferStreamIO {
+export interface IBufferStream {
     endOfStream: boolean
+    length: number
     shrinkwrap: ArrayBuffer
+    seek(n: number, absolute?: boolean): IBufferStream
+}
+
+export interface IBufferStreamIO extends IBufferStream {
     littleEndian: IBufferStreamIO
     bigEndian: IBufferStreamIO
     seek(n: number, absolute?: boolean): IBufferStreamIO
