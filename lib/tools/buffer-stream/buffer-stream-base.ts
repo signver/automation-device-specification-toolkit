@@ -1,4 +1,5 @@
-import { IBufferStreamIOOP, IBufferStreamOptions, IBufferStreamIO } from './common'
+import { between } from '@signver/assert/numbers'
+import { IBufferStreamIOOP, IBufferStreamOptions } from './common'
 
 type DataViewMethod<Key extends keyof DataView> =  DataView[Key]
 type MultiByteReadMethod = DataViewMethod<'getFloat32' | 'getFloat64' | 'getInt16' | 'getInt32' | 'getUint16' | 'getUint32'>
@@ -105,9 +106,7 @@ export abstract class BufferStreamBase {
     }
 
     public seek(n: number, absolute?: boolean) {
-        const end = absolute ? n : this. position + n
-        if (end < 0 || end > this.buffer.byteLength) throw new Error(/**@todo */)
-        this.position = end
+        this.position = between(absolute ? n : this. position + n, 0, this.buffer.byteLength)
         return this
     }
 

@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./numbers": "./src/numbers"
+    "./numbers": "./src/numbers/index.ts"
   },
   "devDependencies": {},
   "scripts": {
