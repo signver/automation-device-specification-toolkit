@@ -18,7 +18,6 @@ export class AMSMessageData<Parent> implements IAMSMessageData<Parent> {
     public constructor(parent: Parent) {
         this.link = parent
     }
-
     
     public get packet() {
         return this.link

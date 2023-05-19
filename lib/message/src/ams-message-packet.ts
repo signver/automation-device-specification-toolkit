@@ -1,8 +1,10 @@
 import { AMSNetAddress } from '@signver/ams-address'
 import { AMSMessageData } from './ams-message-data'
-import { Command, Flag } from './constants'
+import { AdsPacketDataEvent, Command, Flag } from './constants'
 
-interface IAMSMessagePacket {
+interface IAMSMessagePacket extends IAMSMessageCommand, IAMSMessageFlags, IAMSMessageMeta, IAMSMessageReceiver, IAMSMessageSender {}
+
+interface IAMSMessageMeta {
     dataLength: {
         (): number
         (l: number): IAMSMessagePacket
@@ -17,7 +19,7 @@ interface IAMSMessagePacket {
     }
 }
 
-interface IAMSCommand {
+interface IAMSMessageCommand {
     readDeviceInfo: IAMSMessagePacket
     read: IAMSMessagePacket
     write: IAMSMessagePacket
@@ -32,7 +34,7 @@ interface IAMSCommand {
 interface IAMSMessageReceiver {
     to: {
         (): AMSNetAddress
-        (n: string, port: number): IAMSCommand
+        (n: string, port: number): IAMSMessageCommand
     }
 }
 
@@ -43,14 +45,17 @@ interface IAMSMessageSender {
     }
 }
 
-interface IAMSFlags {
+interface IAMSMessageFlags {
     tcpReqFlag: IAMSMessageSender
     tcpResFlag: IAMSMessageSender
     udpReqFlag: IAMSMessageSender
     udpResFlag: IAMSMessageSender
 }
 
-export class AMSMessagePacket implements IAMSFlags, IAMSMessageSender, IAMSMessageReceiver, IAMSCommand, IAMSMessagePacket {
+
+
+export class AMSMessagePacket implements IAMSMessageFlags, IAMSMessageSender, IAMSMessageReceiver, IAMSMessageCommand, IAMSMessagePacket {
+    private static readonly amsHeaderLength = 32
     private adsCommand: number = Command.Invalid
     private adsFlags: number = Flag.Command
     private adsData: AMSMessageData<IAMSMessagePacket>
@@ -68,6 +73,12 @@ export class AMSMessagePacket implements IAMSFlags, IAMSMessageSender, IAMSMessa
 
     public constructor() {
         this.adsData = new AMSMessageData(this)
+        this.adsData.on(
+            AdsPacketDataEvent.BufferSizeChanged, 
+            (len) => {
+                this.adsDataLength = len + AMSMessagePacket.amsHeaderLength
+            }
+        )
     }
 
     // Addressing 
@@ -86,12 +97,12 @@ export class AMSMessagePacket implements IAMSFlags, IAMSMessageSender, IAMSMessa
     }
 
     public to(): AMSNetAddress
-    public to(n: string, port: number): IAMSCommand
+    public to(n: string, port: number): IAMSMessageCommand
     public to(n?: string, port?: number) {
         if (typeof n === 'string' && typeof port === 'number') {
             this.adsTo.octet(n)
             this.adsTo.port = port
-            return this as IAMSCommand
+            return this as IAMSMessageCommand
         }
         const clone = new AMSNetAddress()
         clone.port = this.adsTo.port
@@ -189,4 +200,9 @@ export class AMSMessagePacket implements IAMSFlags, IAMSMessageSender, IAMSMessa
         }
         return this.adsInvokeID
     }
+}
+
+/* istanbul ignore next */
+export function createAMSMessagePacket() {
+    return new AMSMessagePacket() as IAMSMessageFlags
 }
