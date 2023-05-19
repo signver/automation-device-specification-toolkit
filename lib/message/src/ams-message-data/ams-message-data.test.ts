@@ -1,5 +1,4 @@
 import { AMSMessageData } from './ams-message-data'
-import {  } from './constants'
 
 describe("AMSMessageData", () => {
     describe(".packet", () => {

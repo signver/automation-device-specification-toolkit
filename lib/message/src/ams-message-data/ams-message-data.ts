@@ -1,4 +1,4 @@
-import { DataEvent, Command } from './constants'
+import { DataEvent, Command } from '../constants'
 
 export interface IAMSMessageDataBufferSizeChangedHandler {
     (dataLength: number): void
