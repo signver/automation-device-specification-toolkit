@@ -1,25 +1,26 @@
 import { rangeOfUint32 } from "@signver/assert/numbers"
-import { BufferStream } from "../../../tools/buffer-stream"
+import { BufferStream } from "@signver/buffer-stream"
 
 export abstract class ProtocolHeader {
   private protocolHeaderLength = 0
 
-  protected packetLength(): number
-  protected packetLength(len: number): ThisType<ProtocolHeader>
-  protected packetLength(len?: number) {
+  public constructor(len: number) {
+    this.protocolHeaderLength = rangeOfUint32(len)
+  }
+
+  public write(stream: BufferStream) {
+    stream.littleEndian.uint16(0).uint32(this.protocolHeaderLength)
+  }
+
+  public packetLength(): number
+  public packetLength(len: number): ProtocolHeader
+  public packetLength(len?: number) {
     if (typeof len === 'number') {
       this.protocolHeaderLength = rangeOfUint32(len)
-      return this
+      return this as ProtocolHeader
     }
+    /* istanbul ignore next */
     return this.protocolHeaderLength
-  }
-
-  protected get bytes() {
-    return new BufferStream({ size: 6 }).seek(2).littleEndian.uint32(this.protocolHeaderLength)
-  }
-
-  public constructor(len: number) {
-    this.packetLength(len)
   }
 
 }
