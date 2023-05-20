@@ -1,4 +1,4 @@
-import { MessageHeader } from '@signver/ads-message-core'
+import { MessageHeader, createDefaultBuffer } from '@signver/ads-message-core'
 import { BufferStream } from '@signver/buffer-stream'
 
 export class MessageRequestRead extends MessageHeader {
@@ -11,7 +11,7 @@ export class MessageRequestRead extends MessageHeader {
     super(12)
   }
 
-  public override write(stream: BufferStream): BufferStream {
+  public override write(stream: BufferStream = createDefaultBuffer()): BufferStream {
     super
       .write(stream)
       .uint32(this.dataIndexGroup)
