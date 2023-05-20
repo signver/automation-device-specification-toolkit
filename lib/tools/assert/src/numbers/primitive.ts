@@ -1,6 +1,6 @@
 import { between } from './range'
 
-export function rangeOfUint8(value: any) {
+export function rangeOfUint8(value: number) {
     return between(
         value,
         0,
@@ -8,7 +8,7 @@ export function rangeOfUint8(value: any) {
     )
 }
 
-export function rangeOfUint16(value: any) {
+export function rangeOfUint16(value: number) {
     return between(
         value,
         0,
@@ -16,7 +16,7 @@ export function rangeOfUint16(value: any) {
     )
 }
 
-export function rangeOfUint32(value: any) {
+export function rangeOfUint32(value: number) {
     return between(
         value,
         0,
