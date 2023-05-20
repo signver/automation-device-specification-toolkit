@@ -16,3 +16,22 @@ export type AMSPacket<Data = void> = {
   protocolHeader: AMSProtocolHeader
   header: AMSHeader
 } & (Data extends void ? {} : { data: Data })
+
+// Requests
+
+export interface ADSReadRequest {
+  indexGroup: number
+  indexOffset: number
+  length: number
+}
+
+// Responses
+
+export interface ADSResponse {
+  result: number
+}
+
+export interface ADSReadResponse extends ADSResponse {
+  length: number
+  data: ArrayBuffer
+}
