@@ -2,6 +2,7 @@ import { AMSNetAddress } from "@signver/ams-address";
 import { ProtocolHeader } from "./protocol-header";
 import { BufferStream } from "@signver/buffer-stream";
 import { rangeOfUint16, rangeOfUint32 } from "@signver/assert/numbers";
+import { createDefaultBuffer } from "./create-default-buffer";
 
 export abstract class MessageHeader extends ProtocolHeader {
   private static readonly messageHeaderBaseLength = 32
@@ -18,7 +19,11 @@ export abstract class MessageHeader extends ProtocolHeader {
     this.messageHeaderLength = rangeOfUint32(dataLength)
   }
 
-  public override write(stream: BufferStream) {
+  public override write(
+    // unlikely to be touched by users directly
+    /* istanbul ignore next */
+    stream: BufferStream = createDefaultBuffer()
+  ) {
     super.write(stream)
 
     this.messageHeaderFrom.octet().forEach(byte => {
@@ -36,6 +41,8 @@ export abstract class MessageHeader extends ProtocolHeader {
     stream.uint32(this.messageHeaderLength)
     stream.uint32(this.messageHeaderErrorCode)
     stream.uint32(this.messageHeaderInvokeID)
+
+    return stream
   }
 
   public override packetLength(): number;

@@ -1,7 +1,7 @@
 import { between } from '@signver/assert/numbers'
 import { IBufferStreamIOOP, IBufferStreamOptions } from './common'
 
-type DataViewMethod<Key extends keyof DataView> =  DataView[Key]
+type DataViewMethod<Key extends keyof DataView> = DataView[Key]
 type MultiByteReadMethod = DataViewMethod<'getFloat32' | 'getFloat64' | 'getInt16' | 'getInt32' | 'getUint16' | 'getUint32'>
 type SingleByteReadMethod = DataViewMethod<'getInt8' | 'getUint8'>
 type MultiByteWriteMethod = DataViewMethod<'setFloat32' | 'setFloat64' | 'setInt16' | 'setInt32' | 'setUint16' | 'setUint32'>
@@ -65,7 +65,7 @@ export abstract class BufferStreamBase {
         /* istanbul ignore next */
         if (!method) throw new Error(/**@todo */)
         this.tryAdvance(bytes, false)
-        const value = bytes > 1 ? 
+        const value = bytes > 1 ?
             (this.bufferView[method] as MultiByteReadMethod)(this.position, this.optionLittleEndian) :
             (this.bufferView[method] as SingleByteReadMethod)(this.position)
         this.seek(bytes)
@@ -93,6 +93,10 @@ export abstract class BufferStreamBase {
         this.bufferView = new DataView(this.buffer)
     }
 
+    public get isExpandable() {
+        return this.expandable
+    }
+
     public get length() {
         return this.buffer.byteLength
     }
@@ -106,7 +110,7 @@ export abstract class BufferStreamBase {
     }
 
     public seek(n: number, absolute?: boolean) {
-        this.position = between(absolute ? n : this. position + n, 0, this.buffer.byteLength)
+        this.position = between(absolute ? n : this.position + n, 0, this.buffer.byteLength)
         return this
     }
 
