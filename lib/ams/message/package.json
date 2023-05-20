@@ -1,11 +1,11 @@
 {
-  "name": "@signver/ams-address",
+  "name": "message",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage"
   },
   "author": "Chua Siang Poh",
   "license": "MIT"
