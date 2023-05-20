@@ -5,7 +5,7 @@ class MessageHeaderTest extends MessageHeader { }
 
 describe("MessageHeader", () => {
   it("should have a default protocol packet length", () => {
-    const buf = new BufferStream({ size: 6, expand: true, increment: 32 })
+    const buf = new BufferStream({ size: 6, expand: true, increment: 32 }).littleEndian
     const hdr = new MessageHeaderTest(0)
     hdr.write(buf)
     expect(buf.littleEndian.seek(2, true).uint32()).toStrictEqual(32)
@@ -13,14 +13,14 @@ describe("MessageHeader", () => {
 
   describe(".packetLength", () => {
     it("should automatically add the base length", () => {
-      const buf = new BufferStream({ size: 6, expand: true, increment: 32 })
+      const buf = new BufferStream({ size: 6, expand: true, increment: 32 }).littleEndian
       const hdr = new MessageHeaderTest(0)
       hdr.packetLength(8).write(buf)
       expect(buf.seek(2, true).uint32()).toStrictEqual(40)
     })
 
     it("should write to the correct position in the buffer", () => {
-      const buf = new BufferStream({ size: 6, expand: true, increment: 32 })
+      const buf = new BufferStream({ size: 6, expand: true, increment: 32 }).littleEndian
       const hdr = new MessageHeaderTest(0)
       hdr.packetLength(8).write(buf)
       expect(hdr.packetLength()).toStrictEqual(8)
@@ -33,7 +33,7 @@ describe("MessageHeader", () => {
     it("should write to the correct position in the buffer", () => {
       const id = [192, 168, 0, 1, 1, 1]
       const port = 100
-      const buf = new BufferStream({ size: 6, expand: true, increment: 32 })
+      const buf = new BufferStream({ size: 6, expand: true, increment: 32 }).littleEndian
       const hdr = new MessageHeaderTest(0)
       hdr.from(id.join('.'), port).write(buf)
       expect(hdr.from().octet()).toEqual(expect.arrayContaining(id))
@@ -50,7 +50,7 @@ describe("MessageHeader", () => {
     it("should write to the correct position in the buffer", () => {
       const id = [192, 168, 0, 1, 1, 1]
       const port = 100
-      const buf = new BufferStream({ size: 6, expand: true, increment: 32 })
+      const buf = new BufferStream({ size: 6, expand: true, increment: 32 }).littleEndian
       const hdr = new MessageHeaderTest(0)
       hdr.to(id.join('.'), port).write(buf)
       expect(hdr.to().octet()).toEqual(expect.arrayContaining(id))
@@ -65,7 +65,7 @@ describe("MessageHeader", () => {
 
   describe(".command", () => {
     it("should write to the correct position in the buffer", () => {
-      const buf = new BufferStream({ size: 6, expand: true, increment: 32 })
+      const buf = new BufferStream({ size: 6, expand: true, increment: 32 }).littleEndian
       const hdr = new MessageHeaderTest(0)
       hdr.command(8).write(buf)
       expect(hdr.command()).toStrictEqual(8)
@@ -75,7 +75,7 @@ describe("MessageHeader", () => {
 
   describe(".flags", () => {
     it("should write to the correct position in the buffer", () => {
-      const buf = new BufferStream({ size: 6, expand: true, increment: 32 })
+      const buf = new BufferStream({ size: 6, expand: true, increment: 32 }).littleEndian
       const hdr = new MessageHeaderTest(0)
       hdr.flags(8).write(buf)
       expect(hdr.flags()).toStrictEqual(8)
@@ -85,7 +85,7 @@ describe("MessageHeader", () => {
 
   describe(".errorCode", () => {
     it("should write to the correct position in the buffer", () => {
-      const buf = new BufferStream({ size: 6, expand: true, increment: 32 })
+      const buf = new BufferStream({ size: 6, expand: true, increment: 32 }).littleEndian
       const hdr = new MessageHeaderTest(0)
       hdr.errorCode(8).write(buf)
       expect(hdr.errorCode()).toStrictEqual(8)
@@ -95,7 +95,7 @@ describe("MessageHeader", () => {
 
   describe(".invokeID", () => {
     it("should write to the correct position in the buffer", () => {
-      const buf = new BufferStream({ size: 6, expand: true, increment: 32 })
+      const buf = new BufferStream({ size: 6, expand: true, increment: 32 }).littleEndian
       const hdr = new MessageHeaderTest(0)
       hdr.invokeID(8).write(buf)
       expect(hdr.invokeID()).toStrictEqual(8)

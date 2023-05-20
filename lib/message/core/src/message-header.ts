@@ -21,23 +21,21 @@ export abstract class MessageHeader extends ProtocolHeader {
   public override write(stream: BufferStream) {
     super.write(stream)
 
-    const s = stream.littleEndian
-
     this.messageHeaderFrom.octet().forEach(byte => {
-      s.uint8(byte)
+      stream.uint8(byte)
     })
-    s.uint16(this.messageHeaderFrom.port())
+    stream.uint16(this.messageHeaderFrom.port())
 
     this.messageHeaderTo.octet().forEach(byte => {
-      s.uint8(byte)
+      stream.uint8(byte)
     })
-    s.uint16(this.messageHeaderTo.port())
+    stream.uint16(this.messageHeaderTo.port())
 
-    s.uint16(this.messageHeaderCommand)
-    s.uint16(this.messageHeaderFlags)
-    s.uint32(this.messageHeaderLength)
-    s.uint32(this.messageHeaderErrorCode)
-    s.uint32(this.messageHeaderInvokeID)
+    stream.uint16(this.messageHeaderCommand)
+    stream.uint16(this.messageHeaderFlags)
+    stream.uint32(this.messageHeaderLength)
+    stream.uint32(this.messageHeaderErrorCode)
+    stream.uint32(this.messageHeaderInvokeID)
   }
 
   public override packetLength(): number;
