@@ -9,7 +9,7 @@ export abstract class ProtocolHeader {
   }
 
   public write(stream: BufferStream) {
-    stream.littleEndian.uint16(0).uint32(this.protocolHeaderLength)
+    stream.uint16(0).uint32(this.protocolHeaderLength)
   }
 
   public packetLength(): number
