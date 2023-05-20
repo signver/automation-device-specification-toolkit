@@ -1,7 +1,7 @@
 import { BufferStreamBase } from './buffer-stream-base'
-import { IBufferStreamIOOP, IBufferStreamOptions, IBufferStreamIO } from './common'
+import { IBufferStreamIOOptions, IBufferStreamOptions } from './common'
 
-export class BufferStream extends BufferStreamBase implements IBufferStreamIO {
+export class BufferStream extends BufferStreamBase {
     public constructor(options: IBufferStreamOptions) {
         super(options)
     }
@@ -17,89 +17,89 @@ export class BufferStream extends BufferStreamBase implements IBufferStreamIO {
     }
 
     public uint8(): number
-    public uint8(value: number): IBufferStreamIO
+    public uint8(value: number): BufferStream
     public uint8(value?: number) {
-        const options: IBufferStreamIOOP = { bytes: 1, unsigned: true }
+        const options: IBufferStreamIOOptions = { bytes: 1, unsigned: true }
         if (typeof value === 'number') {
             this.write(value, options)
-            return this as IBufferStreamIO
+            return this as BufferStream
         }
         return this.read(options)
     }
 
     public uint16(): number
-    public uint16(value: number): IBufferStreamIO
+    public uint16(value: number): BufferStream
     public uint16(value?: number) {
-        const options: IBufferStreamIOOP = { bytes: 2, unsigned: true }
+        const options: IBufferStreamIOOptions = { bytes: 2, unsigned: true }
         if (typeof value === 'number') {
             this.write(value, options)
-            return this as IBufferStreamIO
+            return this as BufferStream
         }
         return this.read(options)
     }
 
     public uint32(): number
-    public uint32(value: number): IBufferStreamIO
+    public uint32(value: number): BufferStream
     public uint32(value?: number) {
-        const options: IBufferStreamIOOP = { bytes: 4, unsigned: true }
+        const options: IBufferStreamIOOptions = { bytes: 4, unsigned: true }
         if (typeof value === 'number') {
             this.write(value, options)
-            return this as IBufferStreamIO
+            return this as BufferStream
         }
         return this.read(options)
     }
 
     public int8(): number
-    public int8(value: number): IBufferStreamIO
+    public int8(value: number): BufferStream
     public int8(value?: number) {
-        const options: IBufferStreamIOOP = { bytes: 1, unsigned: false }
+        const options: IBufferStreamIOOptions = { bytes: 1, unsigned: false }
         if (typeof value === 'number') {
             this.write(value, options)
-            return this as IBufferStreamIO
+            return this as BufferStream
         }
         return this.read(options)
     }
 
     public int16(): number
-    public int16(value: number): IBufferStreamIO
+    public int16(value: number): BufferStream
     public int16(value?: number) {
-        const options: IBufferStreamIOOP = { bytes: 2, unsigned: false }
+        const options: IBufferStreamIOOptions = { bytes: 2, unsigned: false }
         if (typeof value === 'number') {
             this.write(value, options)
-            return this as IBufferStreamIO
+            return this as BufferStream
         }
         return this.read(options)
     }
 
     public int32(): number
-    public int32(value: number): IBufferStreamIO
+    public int32(value: number): BufferStream
     public int32(value?: number) {
-        const options: IBufferStreamIOOP = { bytes: 4, unsigned: false }
+        const options: IBufferStreamIOOptions = { bytes: 4, unsigned: false }
         if (typeof value === 'number') {
             this.write(value, options)
-            return this as IBufferStreamIO
+            return this as BufferStream
         }
         return this.read(options)
     }
 
     public float(): number
-    public float(value: number): IBufferStreamIO
+    public float(value: number): BufferStream
     public float(value?: number) {
-        const options: IBufferStreamIOOP = { bytes: 4, floatingPoint: true }
+        const options: IBufferStreamIOOptions = { bytes: 4, floatingPoint: true }
         if (typeof value === 'number') {
             this.write(value, options)
-            return this as IBufferStreamIO
+            return this as BufferStream
         }
         return this.read(options)
     }
 
     public double(): number
-    public double(value: number): IBufferStreamIO
+    public double(value: number): BufferStream
     public double(value?: number) {
-        const options: IBufferStreamIOOP = { bytes: 8, floatingPoint: true }
+        const options: IBufferStreamIOOptions = { bytes: 8, floatingPoint: true }
         if (typeof value === 'number') {
             this.write(value, options)
-            return this as IBufferStreamIO
+            return this as BufferStream
         }
         return this.read(options)
     }

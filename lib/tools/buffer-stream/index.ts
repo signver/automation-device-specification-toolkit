@@ -1,2 +1,2 @@
-export type { IBufferStreamIO, IBufferStreamOptions } from './common'
+export type { IBufferStreamOptions } from './common'
 export * from './buffer-stream'

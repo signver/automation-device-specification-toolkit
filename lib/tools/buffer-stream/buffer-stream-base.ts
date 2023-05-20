@@ -1,5 +1,5 @@
 import { between } from '@signver/assert/numbers'
-import { IBufferStreamIOOP, IBufferStreamOptions } from './common'
+import { IBufferStreamIOOptions, IBufferStreamOptions } from './common'
 
 type DataViewMethod<Key extends keyof DataView> = DataView[Key]
 type MultiByteReadMethod = DataViewMethod<'getFloat32' | 'getFloat64' | 'getInt16' | 'getInt32' | 'getUint16' | 'getUint32'>
@@ -56,7 +56,7 @@ export abstract class BufferStreamBase {
         this.optionLittleEndian = value
     }
 
-    protected read(options: IBufferStreamIOOP) {
+    protected read(options: IBufferStreamIOOptions) {
         const { bytes, floatingPoint, unsigned } = options
         // Robustness
         /* istanbul ignore next */
@@ -72,7 +72,7 @@ export abstract class BufferStreamBase {
         return value
     }
 
-    protected write(value: number, options: IBufferStreamIOOP) {
+    protected write(value: number, options: IBufferStreamIOOptions) {
         const { bytes, floatingPoint, unsigned } = options
         // Robustness
         /* istanbul ignore next */
