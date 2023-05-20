@@ -11,7 +11,7 @@ export class MessageRequestRead extends MessageHeader {
     super(12)
   }
 
-  public override write(stream: BufferStream = createDefaultBuffer()): BufferStream {
+  public override write(stream: BufferStream = createDefaultBuffer(12)): BufferStream {
     super
       .write(stream)
       .uint32(this.dataIndexGroup)
