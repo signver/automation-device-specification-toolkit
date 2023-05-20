@@ -43,7 +43,7 @@ export class MessageRequestRead extends MessageHeader {
   public indexOffset(n: number): MessageRequestRead
   public indexOffset(n?: number | undefined) {
     if (typeof n === 'number') {
-      this.dataIndexGroup = n
+      this.dataIndexOffset = n
       return this as MessageRequestRead
     }
     return this.dataIndexOffset
@@ -53,7 +53,7 @@ export class MessageRequestRead extends MessageHeader {
   public readLength(n: number): MessageRequestRead
   public readLength(n?: number | undefined) {
     if (typeof n === 'number') {
-      this.dataIndexGroup = n
+      this.dataReadLength = n
       return this as MessageRequestRead
     }
     return this.dataReadLength
