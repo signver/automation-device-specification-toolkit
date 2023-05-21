@@ -21,7 +21,27 @@ export type AMSPacket<Data = void> = {
 
 // Requests
 
+export interface ADSRequestWithData {
+  data: ArrayBuffer | null
+}
+
 export interface ADSReadRequest {
+  indexGroup: number
+  indexOffset: number
+  length: number
+}
+
+export interface ADSWriteRequest extends ADSRequestWithData {
+  indexGroup: number
+  indexOffset: number
+}
+
+export interface ADSWriteControlRequest extends ADSRequestWithData {
+  adsState: number
+  deviceState: number
+}
+
+export interface ADSReadWriteRequest extends ADSRequestWithData {
   indexGroup: number
   indexOffset: number
   length: number
