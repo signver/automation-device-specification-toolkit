@@ -1,3 +1,5 @@
+import { AMSNetAddress } from '../address'
+
 export interface AMSProtocolHeader {
   length: number
 }

@@ -1,6 +1,6 @@
 import { integerString, rangeOfUint16 } from "@signver/assert/numbers"
 
-export interface IAMSNetAddress {
+export interface AMSNetAddress {
   id: string,
   port: number
 }
@@ -16,5 +16,5 @@ export function fromString(s: string) {
   return {
     id: amsNetID(id),
     port: rangeOfUint16(parseInt(integerString(port))),
-  }
+  } as AMSNetAddress
 }
