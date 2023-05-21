@@ -23,9 +23,9 @@
   "workspaces": [
     ".",
     "lib/tools/buffer-stream",
-    "lib/address",
     "lib/tools/assert",
-    "lib/message/core",
-    "lib/message/request"
+    "lib/ams/address",
+    "lib/ams/message",
+    "lib/ams/core"
   ]
 }

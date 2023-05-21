@@ -10,3 +10,9 @@ export enum Command {
   DeviceNotification,
   ReadWrite
 }
+
+export enum MessageFlag {
+  Response = 0x1,
+  Command = 0x4,
+  UDP = 0x40,
+}
