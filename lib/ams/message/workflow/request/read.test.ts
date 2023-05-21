@@ -1,16 +1,14 @@
 import { ADSReadRequest, AMSPacket } from '@signver/ams-core'
-import { ReadRequestStage } from '../common'
-import readRequestWorkflow from './read'
+import { ReadRequestStage, RequestStage } from '../common'
+import requestWorkflow from './request'
 
-let message: AMSPacket<ADSReadRequest>
-let workflow: ReadRequestStage
-function initialPacket(): AMSPacket<ADSReadRequest> {
-  return {
-    data: {
-      indexGroup: 0,
-      indexOffset: 0,
-      length: 0,
-    },
+type AMSReadRequestPacket = AMSPacket<ADSReadRequest>
+
+let message: AMSPacket | AMSReadRequestPacket
+let workflow: RequestStage
+let readflow: ReadRequestStage
+function initialize(data?: boolean) {
+  message = {
     header: {
       command: 0,
       destination: {
@@ -30,84 +28,77 @@ function initialPacket(): AMSPacket<ADSReadRequest> {
       length: 0
     }
   }
+  if (data) (message as AMSPacket<ADSReadRequest>).data = {
+    indexGroup: 0,
+    indexOffset: 0,
+    length: 0,
+  }
+  workflow = requestWorkflow(message)
+  readflow = workflow.read
 }
 
-beforeEach(() => {
-  message = initialPacket()
-  workflow = readRequestWorkflow(message)
+beforeAll(() => {
+  initialize()
 })
+describe("read", () => {
+  describe("initialization", () => {
+    it("should set packet base size", () => {
+      const sizeWithoutData = 4 + 4 + 4
+      expect(message.protocolHeader.length).toStrictEqual(32 + sizeWithoutData)
+      expect(message.header.length).toStrictEqual(sizeWithoutData)
+    })
 
-describe("readRequestWorkflow", () => {
-  describe("indexGroup", () => {
-    it("should set", () => {
-      const input = 0xffffffff
-      workflow.indexGroup(input)
-      expect(workflow.indexGroup()).toStrictEqual(input)
-      expect(message.data.indexGroup).toStrictEqual(input)
+    it("should append data structure to message", () => {
+      expect(message).toHaveProperty("data.indexGroup")
+      expect(message).toHaveProperty("data.indexOffset")
+      expect(message).toHaveProperty("data.length")
     })
-    it("should be limited to uint32 values", () => {
-      const input = 0xffffffff01
-      expect(() => {
-        workflow.indexGroup(input)
-      }).toThrow()
-    })
+
   })
-  describe("length", () => {
-    it("should set", () => {
+
+  describe("workflow", () => {
+    it("should set index group", () => {
       const input = 0xff
-      workflow.length(input)
-      expect(workflow.length()).toStrictEqual(input)
-      expect(message.data.length).toStrictEqual(input)
+      expect(workflow.read.indexGroup(input).indexGroup()).toStrictEqual(input)
+      expect((message as AMSReadRequestPacket).data.indexGroup).toStrictEqual(input)
     })
-    it("should be limited to uint32 values", () => {
-      const input = 0xffffffff01
-      expect(() => {
-        workflow.length(input)
-      }).toThrow()
+
+    it("should set index offset", () => {
+      const input = 0xfe
+      expect(workflow.read.indexOffset(input).indexOffset()).toStrictEqual(input)
+      expect((message as AMSReadRequestPacket).data.indexOffset).toStrictEqual(input)
+    })
+
+    it("should set index offset", () => {
+      const input = 0xfd
+      expect(workflow.read.length(input).length()).toStrictEqual(input)
+      expect((message as AMSReadRequestPacket).data.length).toStrictEqual(input)
     })
 
   })
-  describe("indexOffset", () => {
-    it("should set", () => {
-      const input = 0xffffffff
-      workflow.indexOffset(input)
-      expect(workflow.indexOffset()).toStrictEqual(input)
-      expect(message.data.indexOffset).toStrictEqual(input)
-    })
-    it("should be limited to uint32 values", () => {
-      const input = 0xffffffff01
-      expect(() => {
-        workflow.indexOffset(input)
-      }).toThrow()
-    })
 
-  })
-  describe("errorCode", () => {
-    it("should set", () => {
-      const input = 0xffffffff
-      workflow.errorCode(input)
-      expect(workflow.errorCode()).toStrictEqual(input)
+  describe("meta flow", () => {
+    it("should set error code", () => {
+      const input = 0xff
+      expect(workflow.read.errorCode(input).errorCode()).toStrictEqual(input)
       expect(message.header.errorCode).toStrictEqual(input)
     })
-    it("should be limited to uint16 values", () => {
-      const input = 0xffffffff01
-      expect(() => {
-        workflow.errorCode(input)
-      }).toThrow()
-    })
-  })
-  describe("invokeID", () => {
-    it("should set", () => {
-      const input = 0xffffffff
-      workflow.invokeID(input)
-      expect(workflow.invokeID()).toStrictEqual(input)
+
+    it("should set invoke ID", () => {
+      const input = 0xfe
+      expect(workflow.read.invokeID(input).invokeID()).toStrictEqual(input)
       expect(message.header.invokeID).toStrictEqual(input)
     })
-    it("should be limited to uint16 values", () => {
-      const input = 0xffffffff01
-      expect(() => {
-        workflow.invokeID(input)
-      }).toThrow()
+
+    it("should set chainable", () => {
+      const input = [0xff, 0xfe]
+      const stage = workflow.read.errorCode(input[0]).invokeID(input[1])
+      expect(stage.errorCode()).toStrictEqual(input[0])
+      expect(stage.invokeID()).toStrictEqual(input[1])
+      expect(message.header.errorCode).toStrictEqual(input[0])
+      expect(message.header.invokeID).toStrictEqual(input[1])
     })
+
   })
+
 })
