@@ -1,3 +1,6 @@
+import { AMSPacket } from "@signver/ams-core"
+import { rangeOfUint32 } from "@signver/assert/numbers"
+
 type WorkflowStep<Options extends string, Next> = {
   [option in Options]: Next
 }
@@ -160,3 +163,24 @@ export type MessageWorkflow =
       >
     >
   >
+
+export function injectMetaStage<Stage, Message extends AMSPacket>(message: Message, stage?: Stage) {
+  const injectedStage = {
+    ...stage,
+    errorCode(n?: number) {
+      if (typeof n === 'number') {
+        message.header.errorCode = rangeOfUint32(n)
+        return injectedStage
+      }
+      return message.header.errorCode
+    },
+    invokeID(n?: number) {
+      if (typeof n === 'number') {
+        message.header.invokeID = rangeOfUint32(n)
+        return injectedStage
+      }
+      return message.header.invokeID
+    }
+  }
+  return injectedStage as MetaStage<Stage>
+}
