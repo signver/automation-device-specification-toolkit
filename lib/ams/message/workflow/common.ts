@@ -60,7 +60,7 @@ export type RequestStage = WorkflowMultiStep<
   }
 >
 
-interface GetSetFunction<T, R> {
+export interface GetSetFunction<T, R> {
   (): T
   (value: T): R
 }
