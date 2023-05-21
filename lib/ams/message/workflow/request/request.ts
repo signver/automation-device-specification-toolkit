@@ -11,12 +11,15 @@ function setPacketLength(message: AMSPacket, len: number = 0) {
 export default (() => {
   const handleInitialPacket: { [c in CommandOptions]: (message: AMSPacket<any>) => void } = {
     addDeviceNotification: (m) => {
+      /**@todo */
       setPacketLength(m, 0)
     },
     deleteDeviceNotification: (m) => {
+      /**@todo */
       setPacketLength(m, 0)
     },
     deviceNotification: (m) => {
+      /**@todo */
       setPacketLength(m, 0)
     },
     readDeviceInfo: (m) => {
