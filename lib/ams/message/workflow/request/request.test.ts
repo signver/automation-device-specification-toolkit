@@ -48,24 +48,6 @@ describe("request workflow", () => {
 
     })
 
-    describe("read", () => {
-      beforeAll(() => {
-        initialize()
-        worflow.read
-      })
-
-      it("should set the command value", () => {
-        expect(message.header.command).toStrictEqual(Command.Read)
-      })
-
-      it("should initialize the packet length", () => {
-        const sizeWithoutData = 4 + 4 + 4
-        expect(message.header.length).toStrictEqual(sizeWithoutData)
-        expect(message.protocolHeader.length).toStrictEqual(32 + sizeWithoutData)
-      })
-
-    })
-
     describe("write", () => {
       beforeAll(() => {
         initialize()
