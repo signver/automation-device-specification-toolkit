@@ -95,7 +95,6 @@ export type ReadWriteRequestOptions = ExcludeMetaStage<keyof ReadWriteRequestSta
 export type ReadWriteRequestStage = MetaStage<{
   indexGroup: GetSetFunction<number, ReadWriteRequestStage>
   indexOffset: GetSetFunction<number, ReadWriteRequestStage>,
-  readLength: GetSetFunction<number, ReadWriteRequestStage>,
   length: GetSetFunction<number, ReadWriteRequestStage>,
   data: GetSetFunction<ArrayBuffer, ReadWriteRequestStage>,
 }>

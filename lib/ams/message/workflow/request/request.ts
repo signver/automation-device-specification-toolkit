@@ -1,7 +1,9 @@
 import { ADSReadRequest, ADSReadWriteRequest, ADSWriteControlRequest, ADSWriteRequest, AMSPacket, Command } from '@signver/ams-core'
 import { RequestStage, CommandOptions, MetaStage, injectMetaStage } from "../common"
 import createReadStage from './read'
+import createReadWriteStage from './readwrite'
 import createWriteStage from './write'
+import createWriteControlStage from './write-control'
 
 function setPacketLength(message: AMSPacket, len: number = 0) {
   const baseLength = 32
@@ -85,9 +87,9 @@ export default (() => {
       read: createReadStage(message as AMSPacket<ADSReadRequest>),
       readDeviceInfo: meta,
       readState: meta,
-      readWrite: undefined,
+      readWrite: createReadWriteStage(message as AMSPacket<ADSReadWriteRequest>),
       write: createWriteStage(message as AMSPacket<ADSWriteRequest>),
-      writeControl: undefined
+      writeControl: createWriteControlStage(message as AMSPacket<ADSWriteControlRequest>)
     } as any as RequestStage
 
     return new Proxy(
