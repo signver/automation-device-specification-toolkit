@@ -1,4 +1,4 @@
-type AdsResponseResult = {
+export type AdsResponseResult = {
   result: number;
 };
 
@@ -30,21 +30,9 @@ export type AdsAddDeviceNotificationResponseData = AdsResponseResult & {
   id: number;
 };
 
-export type AdsDeleteDeviceNotificationRequestData = AdsResponseResult;
+export type AdsDeleteDeviceNotificationResponseData = AdsResponseResult;
 
-export type AdsSample = AdsResponseResult & {
-  id: number;
-  bytes: number;
-  data: Buffer;
-};
-
-export type AdsStampHeader = {
-  timestamp: number;
-  count: number;
-  samples: AdsSample[];
-};
-
-export type AdsDeviceNotificationRequestData = never;
+export type AdsDeviceNotificationResponseData = never;
 
 export type AdsReadWriteResponseData = AdsReadResponseData &
   AdsWriteResponseData;
