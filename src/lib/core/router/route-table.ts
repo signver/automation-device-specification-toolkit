@@ -1,5 +1,6 @@
 import { AmsNetId } from '../protocol';
 import { isAmsNetId } from '../utils';
+import { NetworkAdapter, NetworkProtocol, NetworkRoute } from './adapter';
 
 export class AmsRouteTable {
   public static readonly ERROR_INVALID_ALIAS = '';
@@ -67,10 +68,8 @@ export class AmsRouteTable {
   }
 }
 
-
-
 interface LookUpTableEventTable {
-  remove: (key: string) => void
+  remove: (key: string) => void;
 }
 
 class LookUpTable<T> {
@@ -87,15 +86,15 @@ class LookUpTable<T> {
 }
 
 export class RouteTable {
+
+
   #splitRoute(route: NetworkRoute) {
     const [protocol, path] = route.split(NETWORK_ROUTE_DELIMITER);
     return [parseInt(protocol), path] as [NetworkProtocol, string];
   }
 
   constructor(
-    private adapters = {
-      [NetworkProtocol.ipv4]: {}
-    }
+    private adapters: Readonly<{ [key in NetworkProtocol]: NetworkAdapter }>
   ) {}
 
   public addRoute(id: AmsNetId, route: NetworkRoute) {

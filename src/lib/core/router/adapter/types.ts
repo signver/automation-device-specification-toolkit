@@ -1,5 +1,5 @@
 export enum NetworkProtocol {
-  ipv4,
+  tcpIpv4,
 }
 
 export const NETWORK_ROUTE_DELIMITER = '::';
