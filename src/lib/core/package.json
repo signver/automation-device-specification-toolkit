@@ -1,0 +1,17 @@
+{
+  "name": "@signver/ads-core",
+  "version": "1.0.0",
+  "description": "",
+  "exports": {
+    ".": "./index.ts",
+    "./utils": "./utils.ts"
+  },
+  "main": "index.ts",
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "author": "Chua Siang Poh",
+  "license": "MIT",
+  "private": true
+}
